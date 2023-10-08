@@ -42,22 +42,32 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<Drink>? drinks;
+  List<Drink> drinks = [];
 
-  Future<void> _restService() async {
-    var url = Uri.parse('https://www.thecocktaildb.com/api/json/v1/1/filter.php?a=Alcoholic');
+  Future<void> _fetchDrinks(String uri) async {
+    var url = Uri.parse(uri);
     var response = await http.get(url);
+
     setState(() {
-      drinks = List<Drink>.from(
+      drinks.addAll(List<Drink>.from(
         jsonDecode(response.body)['drinks'].map(
           (x) => Drink.fromMap(x),
         ),
-      );
+      ));
     });
   }
 
+  Future<void> _alchololService(String uri) async {
+    await _fetchDrinks(uri);
+  }
+
+  Future<void> _nonAlchololService(String uri) async {
+    await _fetchDrinks(uri);
+  }
+
   init() async {
-    _restService();
+    await _alchololService('https://www.thecocktaildb.com/api/json/v1/1/filter.php?a=Alcoholic');
+    await _nonAlchololService('https://www.thecocktaildb.com/api/json/v1/1/filter.php?a=Non_Alcoholic');
   }
 
   @override
@@ -85,17 +95,21 @@ class _MyHomePageState extends State<MyHomePage> {
               )
             ];
           },
-          body: drinks != null
+          body: drinks.isNotEmpty
               ? ListView(
                   padding: const EdgeInsets.only(right: 8, left: 8, bottom: 20),
-                  children: drinks!
+                  children: drinks
                       .map((e) => CustomCardWidget(
-                            imageName: e.imageUrl,
-                            name: e.name,
-                            category: e.category ?? "-",
-                            isFavorite: e.isFavorite,
-                            hasWarning: true,
-                          ))
+                          imageName: e.imageUrl,
+                          name: e.name,
+                          category: e.category ?? "-",
+                          isFavorite: e.isFavorite,
+                          hasWarning: true,
+                          onTap: () {
+                            setState(() {
+                              e.isFavorite = !e.isFavorite;
+                            });
+                          }))
                       .toList())
               : const CircularProgressIndicator(),
         ),

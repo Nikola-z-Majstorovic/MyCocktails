@@ -6,6 +6,7 @@ class CustomCardWidget extends StatelessWidget {
   final String category;
   final bool isFavorite;
   final bool hasWarning;
+  final Function() onTap;
 
   const CustomCardWidget({
     super.key,
@@ -14,6 +15,7 @@ class CustomCardWidget extends StatelessWidget {
     required this.category,
     this.isFavorite = false,
     this.hasWarning = false,
+    required this.onTap,
   });
 
   @override
@@ -24,67 +26,68 @@ class CustomCardWidget extends StatelessWidget {
       ),
       elevation: 1.0,
       child: Padding(
-        padding: const EdgeInsets.only(
-          left: 25.0,
-        ),
+        padding: const EdgeInsets.only(left: 25.0, right: 25.0),
         child: Row(
           children: [
-            // Left Side (Image and Info)
-            Padding(
-              padding: const EdgeInsets.only(right: 16.0),
-              child: Image(
-                width: 80.0,
-                height: 80.0,
-                fit: BoxFit.cover,
-                image: NetworkImage(
-                  imageName,
+            Image.network(
+              width: 80.0,
+              height: 80.0,
+              imageName,
+              errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                return Image.asset(
+                  'assets/pictures/No_picture_available.png',
+                  width: 80.0,
+                  height: 80.0,
+                );
+              },
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Name",
+                      style: TextStyle(
+                        color: Colors.grey,
+                      ),
+                    ),
+                    const SizedBox(height: 8.0),
+                    Text(
+                      name,
+                      style: const TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8.0),
+                    const Text(
+                      'Category:',
+                      style: TextStyle(
+                        color: Colors.grey,
+                      ),
+                    ),
+                    Text(
+                      category,
+                      style: const TextStyle(fontSize: 16.0),
+                    ),
+                  ],
                 ),
               ),
             ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Name",
-                    style: TextStyle(
-                      color: Colors.grey,
-                    ),
-                  ),
-                  const SizedBox(height: 8.0),
-                  Text(
-                    name,
-                    style: const TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 8.0),
-                  const Text(
-                    'Category:',
-                    style: TextStyle(
-                      color: Colors.grey,
-                    ),
-                  ),
-                  Text(
-                    category,
-                    style: const TextStyle(fontSize: 16.0),
-                  ),
-                ],
-              ),
-            ),
-            // Right Side (Favorite Icon and Warning)
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                // Favorite Icon
-                Icon(
-                  isFavorite ? Icons.favorite : Icons.favorite_border,
-                  color: Colors.grey,
-                  size: 30.0,
+                InkWell(
+                  onTap: onTap,
+                  child: Icon(
+                    isFavorite ? Icons.favorite : Icons.favorite_border,
+                    color: Colors.grey,
+                    size: 30.0,
+                  ),
                 ),
-                const SizedBox(height: 16.0),
-                // Warning Icon
+                const SizedBox(height: 22.0),
                 Image.asset(
                   "assets/icons/settings_alert.png",
                 ),

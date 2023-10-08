@@ -33,7 +33,7 @@ class Drink {
       id: map['idDrink'] ?? '',
       name: map['strDrink'] ?? '',
       imageUrl: map['strDrinkThumb'] ?? '',
-      category: map['category'],
+      category: map['category'],  // there's no attribute which tells category
     );
   }
 
