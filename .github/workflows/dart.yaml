@@ -1,0 +1,37 @@
+name: Flutter Build and Deploy
+
+on:
+  push:
+    branches:
+      - main # Change this to your main branch
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: master
+
+      - name: Flutter Upgrade and Web Config
+        run: |
+          flutter upgrade
+          flutter doctor
+          flutter config --enable-web
+
+      - name: Flutter Build Web
+        run: flutter build web --release
+
+      - name: Deploy to Hosting Service (Replace with your deployment step)
+        # Add the necessary steps or commands to deploy your application to your hosting service (e.g., Firebase, GitHub Pages, Netlify, etc.)
+
+      - name: Archive Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: build
+          path: build/
