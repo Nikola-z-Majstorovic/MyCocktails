@@ -47,7 +47,7 @@ jobs:
       #     path: build/
   build_and_deploy2:      
     runs-on: ubuntu-latest
-    if: github.ref != 'refs/heads/main'
+    if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v1
