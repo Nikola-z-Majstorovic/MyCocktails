@@ -1,6 +1,9 @@
 name: Flutter Build and Deploy
 
 on:
+  pull_request:
+    branches:
+      - main
   push:
     branches:
       - main # Change this to your main branch
